@@ -1,10 +1,11 @@
 import sys, getopt, time
+import getpass
 import pickle
 from selenium import webdriver
 
 def login(driver):
     email = input("Email:")
-    password = input("Password:")
+    password = getpass.getpass("Password:")
     print("Login...")
     times = 0
     while(1):
