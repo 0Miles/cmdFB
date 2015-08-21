@@ -1,4 +1,4 @@
-import sys, getopt, time
+import sys, getopt, time, os
 import getpass
 import pickle
 from selenium import webdriver
@@ -25,9 +25,8 @@ def login(driver):
     			print("Time Out")
     			exit()
     try:
-        driver.find_element_by_xpath('//*[@id="u_0_z"]')
-        driver.find_element_by_xpath('//*[@id="u_0_i"]/a')
-        pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
+        driver.find_element_by_tag_name('textarea')
+        pickle.dump(driver.get_cookies(), open("{}/cookies.pkl".format(os.path.split(os.path.realpath(__file__))[0]),"wb"))
     except:
         print("LogIn Failed")
         driver.quit()
@@ -38,11 +37,10 @@ def post(driver, content):
     times = 0
     while(1):
     	try:
-    		msgbox = driver.find_element_by_xpath('//*[@id="u_0_z"]')
+    		msgbox = driver.find_element_by_tag_name('textarea')
     		time.sleep(0.5)
     		msgbox.send_keys(content)
     		msgbox.submit()
-            print(content)
     		break
     	except():
     		time.sleep(0.5)
@@ -56,21 +54,21 @@ def main(argv):
         opts, args = getopt.getopt(argv,"h",[])
         # opts, args = getopt.getopt(argv,"hp:",["picture="])
     except getopt.GetoptError:
-        print('facebook.py -p <picture> <content>')
+        print('facebook.py <content>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('facebook.py -p <picture> <content>')
+            print('facebook.py <content>')
             sys.exit()
         # elif opt in ("-p", "--picture"):
         #     picture = arg
 
     service_args = ['--cookies-file=./cookies.txt']
     # driver = webdriver.Firefox()
-    driver = webdriver.PhantomJS(executable_path='./phantomjs', service_args=service_args)
+    driver = webdriver.PhantomJS(executable_path=os.path.split(os.path.realpath(__file__))[0]+'/phantomjs', service_args=service_args)
     try:
-        cookies = pickle.load(open("cookies.pkl", "rb"))
+        cookies = pickle.load(open("{}/cookies.pkl".format(os.path.split(os.path.realpath(__file__))[0]), "rb"))
         for cookie in cookies:
             driver.add_cookie(cookie)
         driver.get('https://www.facebook.com/');
@@ -79,8 +77,7 @@ def main(argv):
         login(driver)
 
     try:
-        driver.find_element_by_xpath('//*[@id="u_0_z"]')
-        driver.find_element_by_xpath('//*[@id="u_0_i"]/a')
+        driver.find_element_by_tag_name('textarea')
 
     except:
         login(driver)
@@ -91,7 +88,7 @@ def main(argv):
         content = ''
 
     post(driver, content)
-
+    print(content)
     driver.close()
 
 if __name__ == "__main__":
