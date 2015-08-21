@@ -42,6 +42,7 @@ def post(driver, content):
     		time.sleep(0.5)
     		msgbox.send_keys(content)
     		msgbox.submit()
+            print(content)
     		break
     	except():
     		time.sleep(0.5)
