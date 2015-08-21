@@ -1,2 +1,1 @@
 selenium==2.47.1
-wheel==0.24.0
